@@ -14,5 +14,5 @@ sudo apt install -yqq pv dialog wget
 wget https://dataset.erwankessler.com/nd1.tar
 echo "849f842e39b632b2e428c1bc6f65e92a  nd1.tar" | md5sum -c -
 (pv -n nd1.tar | tar xvf - -C . ) 2>&1 | dialog --gauge "Extracting file..." 6 50
-mv -r nd1 fgrc_dataset
+mv nd1 fgrc_dataset
 ```
