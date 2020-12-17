@@ -1,4 +1,5 @@
 import time
+from math import floor
 
 import cv2
 from pathlib import *
@@ -30,7 +31,7 @@ for i, file in enumerate(list_files):
         # print("A face is located at pixel location Top: {}, Left: {}, Bottom: {}, Right: {}".format(top, left, bottom, right))
 
         # You can access the actual face itself like this:
-        face_image = image[top:bottom, left:right]
+        face_image = image[max(top-200,0):min(bottom + 50, image.shape[0]), max(left - 100,0):min(right + 100, image.shape[1])]
         pil_image = Image.fromarray(face_image)
         # print(out_path / f"{file.stem}_{i}{file.suffix}")
         pil_image.save(out_path / f"{file.stem}_{j}{file.suffix}")
