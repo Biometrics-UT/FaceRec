@@ -1,2 +1,5 @@
-data
+data/out/*
+data/nd1/*
+data/fgrc_dataset/*
 .idea/
+venv
