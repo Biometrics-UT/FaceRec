@@ -2,6 +2,15 @@ data/out/*
 data/in/*
 data/nd1/*
 data/fgrc_dataset/*
+data/classified/*
+data/improved*
+data/ORIGINAL/*
+data/originals/*
+data/Outlier/*
+src/images/*
+src/data_metrics/*
 .idea/
 venv
 *.tar
+**/__pycache__/*
+**/*.eps

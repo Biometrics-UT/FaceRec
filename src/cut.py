@@ -34,7 +34,7 @@ for i, file in enumerate(list_files):
         face_image = image[max(top-200,0):min(bottom + 50, image.shape[0]), max(left - 100,0):min(right + 100, image.shape[1])]
         pil_image = Image.fromarray(face_image)
         # print(out_path / f"{file.stem}_{i}{file.suffix}")
-        pil_image.save(out_path / f"{file.stem}_{j}{file.suffix}")
+        pil_image.distance_matrix(out_path / f"{file.stem}_{j}{file.suffix}")
     if i % (nbr // 100) == 0:
         print(f"Done at {i / nbr * 100:.2f}% in {time.time() - t:.2f}s")
 print(f"Done at 100% in {time.time() - t:.2f}s")
