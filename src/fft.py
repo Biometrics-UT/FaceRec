@@ -57,11 +57,6 @@ def get_fft(original_path:Path,type,name:str):
 
     plt.savefig(f"images/fft/{name}-hpf.png")
     plt.close()
-    image = imageio.imread(str(file), as_gray =True)
-    fft2 = fftpack.fft2(image)
-
-    plt.imshow(abs(fft2))
-    plt.show()
 
 names = ["original", "Deep Normal", "Deep Sobel", "Sobel", "Normal", "Deep Laplacian", "Laplacian"]
 
