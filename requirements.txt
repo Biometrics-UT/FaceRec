@@ -9,3 +9,5 @@ keras
 tensorflow-gpu
 scikit-learn
 pycairo
+pyeer
+imageio

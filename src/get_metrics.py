@@ -155,7 +155,7 @@ def plot_DET(_good: List[float], _bad: List[float]):
     plt.xlabel('FMR(t)')
     plt.ylabel('FNMR(t)')
     plt.title('DET')
-    plt.plot(x, y, )
+    plt.plot(x, y)
 
 
 def plot_ROC(_good: List[float], _bad: List[float]):
@@ -203,14 +203,24 @@ def trace_matrix(id,size=200):
 
 
 def get_metrics(name: str):
+
+    print(name)
     import os
     os.makedirs(f"images_metrics/{name}", exist_ok=True)
     matrix: List[List[float]] = load_matrix(f"data_metrics/matrix_{name}.txt")
     id: List[int] = load_id(f"data_metrics/id_{name}.txt")
     trace_matrix(id,len(id))
-    plt.savefig(f'images_metrics/{name}/matrix_id.eps', format='eps', dpi=1000)
-    plt.savefig(f'images_metrics/{name}/matrix_id.png', format='png', dpi=1000)
+    #plt.savefig(f'images_metrics/{name}/matrix_id.eps', format='eps', dpi=100)
+    plt.savefig(f'images_metrics/{name}/matrix_id.png', format='png', dpi=100)
     good, bad = split_good_bad(matrix, id)
+    from pyeer.eer_info import get_eer_stats
+    from pyeer.report import generate_eer_report, export_error_rates
+    from pyeer.plot import plot_eer_stats
+
+    # Calculating stats for classifier A
+    stats_a = get_eer_stats(good, bad)
+    print(stats_a)
+    plot_eer_stats([stats_a], ['A'])
     print(len(good), len(bad))
     print(compute_eer(good, bad))
     plot_hists(good, bad, len(matrix))
