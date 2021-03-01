@@ -1,21 +1,19 @@
 import itertools
-import json
 import time
+from pathlib import *
 from typing import List
 
-from pathlib import *
-import numpy as np
-import face_recognition
 import dlib
-from scipy import stats
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
-from src.utils import resize_image_exact, compute_encoding, get_dict, get_best_encoding, remove_wrong_indexes
+import face_recognition
+import numpy as np
+
+from src.utils import resize_image_exact, compute_encoding, get_dict, remove_wrong_indexes
 
 assert dlib.DLIB_USE_CUDA
 
 import os
-os.makedirs("data_metrics",exist_ok=True)
+
+os.makedirs("data_metrics", exist_ok=True)
 
 def get_matrix(original_path, type):
     print(original_path.__str__())
@@ -32,7 +30,7 @@ def get_matrix(original_path, type):
     original_enc = [el[0] for el in original_enc]
 
     d = get_dict(original_path, type, [el[3] for el in wrong_stuff])
-    matrix=[]
+    matrix = []
     for (identity, file_list) in d.items():
         for (file, index) in file_list:
             current_encoding = original_enc[index]
@@ -40,13 +38,18 @@ def get_matrix(original_path, type):
             matrix.append([str(el) for el in face_distances])
     with open(f'data_metrics/matrix_{original_path.name}.txt', 'w') as outfile:
         for l in matrix:
-            outfile.write(" ".join(l)+"\n")
+            outfile.write(" ".join(l) + "\n")
     with open(f'data_metrics/id_{original_path.name}.txt', 'w') as outfile:
-        outfile.write(" ".join(list(itertools.chain.from_iterable(itertools.repeat(k, len(v)) for (k,v) in d.items())))+"\n")
+        outfile.write(" ".join(list(itertools.chain.from_iterable(itertools.repeat(k, len(v)) for (k, v) in d.items()))) + "\n")
 
     return matrix
 
 
-get_matrix(original_path=Path("../data/originals"), type="jpg")
-for i in range(1, 7):
-    get_matrix(original_path=Path("../data/improved" + str(i)), type="png")
+def get_matrices():
+    get_matrix(original_path=Path("../data/originals"), type="jpg")
+    for i in range(1, 7):
+        get_matrix(original_path=Path("../data/improved" + str(i)), type="png")
+
+
+if __name__ == '__main__':
+    get_matrices()

@@ -41,9 +41,6 @@ def mean_squared_error(y_true, y_pred):
     return tf.reduce_mean(squared_difference, axis=-1)
 
 
-
-
-
 if download_file("https://dataset.erwankessler.com/faces.tar"):
     print("File downloaded")
 else:
@@ -66,5 +63,4 @@ laplacian_three_path = "../../data/dataset_images/LaplacianImages/three"
 all_images_path = get_all_files(main_path)
 random.shuffle(all_images_path)
 
-number_of_images=len(all_images_path)
-
+number_of_images = len(all_images_path)

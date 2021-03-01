@@ -87,7 +87,7 @@ def load_matrix(filename: str) -> List[List[float]]:
     matrix: List[List[float]] = []
     with open(filename) as f:
         for line in f:
-            row: List[float] = list(map(float, line.split()))
+            row: List[float] = list(map(lambda x: float(x) * 1000, line.split()))
             matrix.append(row)
     return matrix
 
@@ -192,7 +192,7 @@ def compute_eer(_good: List[float], _bad: List[float]):
     return err
 
 
-def trace_matrix(id,size=200):
+def trace_matrix(id, size=200):
     arr = np.zeros((size, size))
     for i, y in enumerate(id[:size]):
         for j, x in enumerate(id[:size]):
@@ -202,25 +202,27 @@ def trace_matrix(id,size=200):
     plt.imshow(arr, interpolation='none')
 
 
-def get_metrics(name: str):
-
-    print(name)
+def get_metrics(name: str, actual_name: str):
+    print(name, actual_name)
     import os
-    os.makedirs(f"images_metrics/{name}", exist_ok=True)
+    os.makedirs(f"images_metrics/{actual_name}", exist_ok=True)
     matrix: List[List[float]] = load_matrix(f"data_metrics/matrix_{name}.txt")
     id: List[int] = load_id(f"data_metrics/id_{name}.txt")
-    trace_matrix(id,len(id))
-    #plt.savefig(f'images_metrics/{name}/matrix_id.eps', format='eps', dpi=100)
-    plt.savefig(f'images_metrics/{name}/matrix_id.png', format='png', dpi=100)
+    trace_matrix(id, len(id))
+    # plt.savefig(f'images_metrics/{name}/matrix_id.eps', format='eps', dpi=100)
+    plt.savefig(f'images_metrics/{actual_name}/matrix_id.png', format='png', dpi=100)
     good, bad = split_good_bad(matrix, id)
     from pyeer.eer_info import get_eer_stats
     from pyeer.report import generate_eer_report, export_error_rates
     from pyeer.plot import plot_eer_stats
 
     # Calculating stats for classifier A
-    stats_a = get_eer_stats(good, bad)
-    print(stats_a)
-    plot_eer_stats([stats_a], ['A'])
+    stats_a = get_eer_stats(good, bad, ds_scores=True)
+
+    print(stats_a.eer)
+    # print(stats_a)
+    plot_eer_stats([stats_a], ['A'], save_path=f'images_metrics/{actual_name}')
+    return
     print(len(good), len(bad))
     print(compute_eer(good, bad))
     plot_hists(good, bad, len(matrix))
@@ -241,7 +243,12 @@ def get_metrics(name: str):
     plt.show()
 
 
-if __name__ == '__main__':
-    get_metrics("originals")
+def run_metrics():
+    names = ["original", "Deep Normal", "Deep Sobel", "Sobel", "Normal", "Deep Laplacian", "Laplacian"]
+    get_metrics("originals", names[0])
     for i in range(1, 7):
-        get_metrics("improved" + str(i))
+        get_metrics("improved" + str(i), names[i])
+
+
+if __name__ == '__main__':
+    run_metrics()

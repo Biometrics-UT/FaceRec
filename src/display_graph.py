@@ -17,6 +17,7 @@ js = []
 for p in paths:
     with open("stats/stats_" + p + ".json") as in_file:
         js.append(json.load(in_file))
+
 means = [[s[2] for s in d.values()] for d in js]
 permutated_means = [means[i] for i in permutation]
 identities = js[0].keys()
