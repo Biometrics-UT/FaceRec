@@ -37,7 +37,29 @@ def extract_tar(path: str = "../../data/temp.tar", out_path: str = "../../data/d
     import tarfile
     import shutil
     with tarfile.open(path) as tar:
-        tar.extractall(out_path)
+        
+        import os
+        
+        def is_within_directory(directory, target):
+            
+            abs_directory = os.path.abspath(directory)
+            abs_target = os.path.abspath(target)
+        
+            prefix = os.path.commonprefix([abs_directory, abs_target])
+            
+            return prefix == abs_directory
+        
+        def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
+        
+            for member in tar.getmembers():
+                member_path = os.path.join(path, member.name)
+                if not is_within_directory(path, member_path):
+                    raise Exception("Attempted Path Traversal in Tar File")
+        
+            tar.extractall(path, members, numeric_owner=numeric_owner) 
+            
+        
+        safe_extract(tar, out_path)
     for file in get_all_files(out_path):
         shutil.move(file.absolute().__str__(), out_path)
     dirs = [x for x in Path(out_path).iterdir() if not x.is_file()]
